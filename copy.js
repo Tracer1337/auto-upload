@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer")
 const waitForNetworkIdle = require("./lib/waitForNetworkIdle")
 
 const URL = "https://cloud2go.tk/drive"
-const EMAIL = "osr60157@eoopy.com"
+const EMAIL = "ned07725@eoopy.com"
 const PASSWORD = "123456"
 
 const EMAIL_SELECTOR = "#login-email"
