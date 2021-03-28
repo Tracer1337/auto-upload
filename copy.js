@@ -12,6 +12,14 @@ const FILE_BUTTON_SELECTOR = "files-grid-item"
 const CONTEXT_BUTTONS_SELECTOR = "drive-context-menu button"
 const COPY_BUTTON_INDEX = 6
 
+if (!process.send) {
+    process.send = (message) => {
+        if (message.event === "status") {
+            console.log(message.value)
+        }
+    }
+}
+
 async function login(page) {
     await page.type(EMAIL_SELECTOR, EMAIL)
     await page.type(PASSWORD_SELECTOR, PASSWORD)
@@ -29,25 +37,27 @@ async function copyLatestFile(page) {
     ])
 }
 
-;(async () => { 
+async function withIndicator(fn, message) {
+    process.send({ event: "status", value: message })
+    await fn()
+}
+
+;(async () => {
+    process.send({ event: "start" })
+
     const browser = await puppeteer.launch({
         headless: true
     })
     const page = await browser.newPage()
     await page.goto(URL)
 
-    console.log("Logging in...")
-    await login(page)
-    console.log("Done")
+    await withIndicator(() => login(page), "Logging in...")
     
     await waitForNetworkIdle(page)
     await page.waitForTimeout(3000)
 
     let i = 0
     while (true) {
-        console.log(`Iteration: ${i}`)
-        await copyLatestFile(page)
-        console.log("Done")
-        i++
+        await withIndicator(() => copyLatestFile(page), i++)
     }
 })()

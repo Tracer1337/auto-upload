@@ -1,6 +1,10 @@
-const { spawn } = require("child_process")
+const cluster = require("cluster")
 const os = require("os")
+const path = require("path")
 const { program } = require("commander")
+const React = require("react")
+const { render, Text, Box, Spacer } = require("ink")
+const osUtils = require("os-utils")
 
 const cpus = os.cpus().length
 
@@ -12,13 +16,110 @@ program.parse()
 
 const options = program.opts()
 
-function pipe(stream, targetFn) {
-    stream.setEncoding("utf-8")
-    stream.on("data", data => targetFn(data))
+function bitsToBytes(bits) {
+    return bits / Math.pow(1024, 3)
 }
 
-for (let i = 0; i < options.nWorkers; i++) {
-    const child = spawn("node", [options.script])
-    pipe(child.stdout, console.log.bind(console, i))
-    pipe(child.stderr, console.error.bind(console, i))
+function SystemInformation() {
+    const [cpu, setCPU] = React.useState(0)
+    const [ram, setRAM] = React.useState(0)
+    const [totalRam, setTotalRam] = React.useState(0)
+
+    const update = () => {
+        osUtils.cpuUsage(setCPU)
+        const totalmem = bitsToBytes(os.totalmem())
+        const freemem = bitsToBytes(os.freemem())
+        setRAM((totalmem - freemem))
+        setTotalRam(totalmem)
+    }
+
+    React.useEffect(() => {
+        setInterval(update, 500)
+    }, [])
+
+    return [
+        React.createElement(Text, {
+            children: `CPU: ${cpu.toFixed(2)}%  `,
+            key: 0
+        }),
+        React.createElement(Text, {
+            children: `RAM: ${ram.toFixed(2)}/${totalRam.toFixed(2)}`,
+            key: 2
+        })
+    ]
+}
+
+function Worker({ worker }) {
+    const [isRunning, setIsRunning] = React.useState(false)
+    const [status, setStatus] = React.useState("")
+
+    const eventHandlers = {
+        "start": () => setIsRunning(true),
+        "status": (message) => setStatus(message.value),
+        "stop": () => setIsRunning(false)
+    }
+
+    const handleMessage = (message) => {
+        if (!(message.event in eventHandlers)) {
+            console.warn(`Unsupported event: ${message.event}`)
+            return
+        }
+
+        eventHandlers[message.event](message)
+    }
+    
+    React.useEffect(() => {
+        worker.on("message", handleMessage)
+    }, [worker])
+
+    if (!isRunning) {
+        return React.createElement(Text, {
+            children: `${worker.id}: Inactive`
+        })
+    }
+
+    return React.createElement(Text, {
+        children: `${worker.id}: Active: ${status}`
+    })
+}
+
+if (cluster.isMaster) {
+    const workers = []
+    
+    for (let i = 0; i < options.nWorkers; i++) {
+        workers[i] = React.createElement(Worker, {
+            worker: cluster.fork(),
+            key: i
+        })
+    }
+
+    cluster.on("exit", (worker, code, signal) => {
+        if (signal) {
+            console.log(`Worker ${worker.id} killed by signal ${signal}`)
+        } else if (code !== 0) {
+            console.log(`Worker ${worker.id} exited with code ${signal}`)
+        } else {
+            console.log(`Worker ${worker.id} terminated`)
+        }
+    })
+
+    render([
+        React.createElement(Box, {
+            key: 0,
+            borderStyle: "classic",
+            paddingLeft: 1,
+            children: React.createElement(SystemInformation),
+        }),
+        React.createElement(Box, {
+            key: 1,
+            borderStyle: "classic",
+            paddingLeft: 1,
+            flexDirection: "column",
+            children: workers
+        })
+    ])
+}
+
+if (cluster.isWorker) {
+    require(path.join(__dirname, options.script))
 }
