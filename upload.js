@@ -37,7 +37,7 @@ async function upload(page, file) {
         button.evaluate(e => e.click())
     ])
     await Promise.all([
-        waitForNetworkIdle(page, ),
+        waitForNetworkIdle(page),
         fileChooser.accept([file])
     ])
 }

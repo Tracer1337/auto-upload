@@ -38,6 +38,7 @@ async function copyLatestFile(page) {
 
     await login(page)
     await waitForNetworkIdle(page)
+    await page.waitForTimeout(3000)
 
     let i = 0
     while (true) {
