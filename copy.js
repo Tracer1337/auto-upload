@@ -29,14 +29,17 @@ async function copyLatestFile(page) {
     ])
 }
 
-;(async () => {
+;(async () => { 
     const browser = await puppeteer.launch({
-        headless: false
+        headless: true
     })
     const page = await browser.newPage()
     await page.goto(URL)
 
+    console.log("Logging in...")
     await login(page)
+    console.log("Done")
+    
     await waitForNetworkIdle(page)
     await page.waitForTimeout(3000)
 
