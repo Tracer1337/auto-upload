@@ -46,7 +46,7 @@ async function withIndicator(fn, message) {
     process.send({ event: "start" })
 
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: [
             "--window-size=1920,1080"
         ],
