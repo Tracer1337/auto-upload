@@ -1,4 +1,5 @@
 ### Quick Start
 
-``npm install``
-``node upload.js <filename>``
+``npm install``  
+Upload new files: ``node upload.js <filename>``  
+Copy an existing file: ``node copy.js``
