@@ -1,5 +1,6 @@
 const { events } = require("./utils")
 const generateFile = require("./actions/generateFile.js")
+const startBrowser = require("./actions/startBrowser.js")
 
 async function run() {
     events.start()
@@ -7,6 +8,9 @@ async function run() {
     // Generate random 100MB file
     events.status("Generate file")
     const filepath = await generateFile()
+
+    // Start browser
+    const browser = await startBrowser()
 
     // Register new account
 

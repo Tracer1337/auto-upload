@@ -1,4 +1,5 @@
 {
-    "uploadFileSizeMB": 100,
-    "tempDir": "temp"
+    "uploadFileSizeMB": 10,
+    "tempDir": "temp",
+    "headless": false
 }

@@ -24,6 +24,10 @@ function generateChunk(length, size) {
     return chunk
 }
 
+function generateMegabyte() {
+    return generateChunk(10 ** 6, 10 ** 8)
+}
+
 async function generateFile() {
     await ensureTempDirExists()
     
@@ -32,7 +36,7 @@ async function generateFile() {
     const writeStream = fs.createWriteStream(filepath)
 
     for (let i = 0; i < config.uploadFileSizeMB; i++) {
-        const chunk = generateChunk(10 ** 6, 10 ** 8)
+        const chunk = generateMegabyte()
         const buffer = Buffer.from(chunk)
         await writeAsync(writeStream, buffer)
     }
