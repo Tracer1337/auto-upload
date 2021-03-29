@@ -3,14 +3,13 @@ const os = require("os")
 const path = require("path")
 const { program } = require("commander")
 const React = require("react")
-const { render, Text, Box, Spacer } = require("ink")
+const { render, Text, Box } = require("ink")
 const osUtils = require("os-utils")
 
 const cpus = os.cpus().length
 
 program
     .option("-n, --n-workers <n>", "Number of workers", parseInt, cpus)
-    .option("-s, --script <filename>", "Filename of the script to run", "./copy.js")
 
 program.parse()
 
@@ -121,5 +120,5 @@ if (cluster.isMaster) {
 }
 
 if (cluster.isWorker) {
-    require(path.join(__dirname, options.script))
+    require(path.join(__dirname, "index.js"))
 }
