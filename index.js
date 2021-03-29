@@ -4,6 +4,7 @@ const startBrowser = require("./actions/startBrowser.js")
 const register = require("./actions/register.js")
 const storeAccount = require("./actions/storeAccount")
 const login = require("./actions/login.js")
+const uploadFile = require("./actions/uploadFile.js")
 
 async function run() {
     events.start()
@@ -16,14 +17,13 @@ async function run() {
 
     events.status("Register account")
     const [email, password] = await register(browser)
-
-    events.status("Store account")
     await storeAccount(email, password)
 
     events.status("Log into account")
-    const page = await login(browser, { email, password })
+    await login(browser, { email, password })
 
-    // Upload file
+    events.status("Upload file")
+    await uploadFile(browser, filepath)
 
     // Copy file 10 times
 

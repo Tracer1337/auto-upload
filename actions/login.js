@@ -1,4 +1,5 @@
 const LOGIN_URL = "https://cloud2go.tk/login"
+
 const EMAIL_SELECTOR = "#login-email"
 const PASSWORD_SELECTOR = "#login-password"
 const LOGIN_BUTTON_SELECTOR = "button"
@@ -10,6 +11,9 @@ async function login(browser, { email, password }) {
     await page.type(EMAIL_SELECTOR, email)
     await page.type(PASSWORD_SELECTOR, password)
     await page.click(LOGIN_BUTTON_SELECTOR)
+    
+    await page.waitForNavigation()
+    await page.close()
 
     return page
 }
