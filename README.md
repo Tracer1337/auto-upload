@@ -1,6 +1,12 @@
 ### Quick Start
 
-``npm install``  
-Upload new files: ``node upload.js <filename>``  
-Copy an existing file: ``node copy.js``  
-Run multiple processes: ``node cluster.js``
+1. ``npm install``
+2. ``node cluster.js``
+
+### Usage
+
+#### Cluster
+``node cluster.js -n <n_processes>``
+
+#### Main Script
+``node index.js``

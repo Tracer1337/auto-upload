@@ -1,7 +1,7 @@
 {
     "uploadFileSizeMB": 1,
     "tempDir": "temp",
-    "headless": false,
+    "headless": true,
     "password": "123456",
     "accountsFile": "accounts.json",
     "pageTimeout": 3000,

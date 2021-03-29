@@ -18,11 +18,11 @@ async function run() {
     events.status("Start browser")
     const browser = await startBrowser()
 
-    events.status("Register account")
+    events.status("Register")
     const [email, password] = await register(browser)
     await storeAccount(email, password)
 
-    events.status("Log into account")
+    events.status("Login")
     await login(browser, { email, password })
 
     events.status("Upload file")
@@ -38,6 +38,7 @@ async function run() {
         await moveFiles(browser)
     }
 
+    await browser.close()
     events.stop()
 }
 

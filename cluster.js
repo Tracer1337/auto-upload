@@ -49,13 +49,13 @@ function SystemInformation() {
 }
 
 function Worker({ worker }) {
-    const [isRunning, setIsRunning] = React.useState(false)
+    const [activity, setActivity] = React.useState("Inactive")
     const [status, setStatus] = React.useState("")
 
     const eventHandlers = {
-        "start": () => setIsRunning(true),
+        "start": () => setActivity("Running"),
         "status": (message) => setStatus(message.value),
-        "stop": () => setIsRunning(false)
+        "stop": () => setActivity("Stopped")
     }
 
     const handleMessage = (message) => {
@@ -71,14 +71,14 @@ function Worker({ worker }) {
         worker.on("message", handleMessage)
     }, [worker])
 
-    if (!isRunning) {
+    if (activity !== "Running") {
         return React.createElement(Text, {
-            children: `${worker.id}: Inactive`
+            children: `${worker.id}: ${activity}`
         })
     }
 
     return React.createElement(Text, {
-        children: `${worker.id}: Active: ${status}`
+        children: `[${worker.id}] ${activity}: ${status}`
     })
 }
 

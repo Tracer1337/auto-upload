@@ -17,7 +17,8 @@ async function register(browser) {
     await page.type(PASSWORD_SELECTOR, config.password)
     await page.type(PASSWORD_CONFIRM_SELECTOR, config.password)
     await page.click(SUBMIT_BUTTON_SELECTOR)
-    
+
+    await page.waitForTimeout(config.pageTimeout)
     await page.close()
 
     return [email, config.password]
