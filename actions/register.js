@@ -1,7 +1,7 @@
 const faker = require("faker")
 const config = require("../config.json")
+const url = require("../url.json")
 
-const REGISTER_URL = "https://cloud2go.tk/register"
 const EMAIL_SELECTOR = "#email"
 const PASSWORD_SELECTOR = "#register_password"
 const PASSWORD_CONFIRM_SELECTOR = "#register_password_confirmation"
@@ -9,7 +9,7 @@ const SUBMIT_BUTTON_SELECTOR = "form button"
 
 async function register(browser) {
     const page = await browser.newPage()
-    await page.goto(REGISTER_URL)
+    await page.goto(url.register)
     
     const email = faker.internet.email()
 

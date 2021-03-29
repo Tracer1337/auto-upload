@@ -4,5 +4,6 @@
     "headless": false,
     "password": "123456",
     "accountsFile": "accounts.json",
-    "uploadTimeout": 3000
+    "uploadTimeout": 3000,
+    "copyFileAmount": 10
 }

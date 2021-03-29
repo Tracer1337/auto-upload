@@ -1,13 +1,12 @@
 const config = require("../config.json")
-
-const DRIVE_URL = "https://cloud2go.tk/drive"
+const url = require("../url.json")
 
 const UPLOAD_BUTTON_SELECTOR = "sidebar-action-buttons button"
 const FILE_SELECTOR = "files-grid-item"
 
 async function uploadFile(browser, filepath) {
     const page = await browser.newPage()
-    await page.goto(DRIVE_URL)
+    await page.goto(url.drive)
     // Without the timeout the upload-button isn't clickable ¯\_(ツ)_/¯
     await page.waitForTimeout(config.uploadTimeout)
 
@@ -20,6 +19,8 @@ async function uploadFile(browser, filepath) {
 
     await fileChooser.accept([filepath])
     await page.waitForSelector(FILE_SELECTOR)
+
+    await page.close()
 }
 
 module.exports = uploadFile
