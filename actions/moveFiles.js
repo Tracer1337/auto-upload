@@ -47,6 +47,8 @@ async function moveFiles(browser) {
     await page.waitForTimeout(1000)
 
     await moveFilesIntoFolder(page)
+
+    await page.close()
 }
 
 module.exports = moveFiles

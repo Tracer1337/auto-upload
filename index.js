@@ -1,3 +1,4 @@
+const config = require("./config.json")
 const { events } = require("./utils")
 const generateFile = require("./actions/generateFile.js")
 const startBrowser = require("./actions/startBrowser.js")
@@ -27,11 +28,17 @@ async function run() {
     events.status("Upload file")
     await uploadFile(browser, filepath)
 
-    events.status("Copy file")
-    await copyFile(browser)
+    for (let i = 0; i < config.folderingIterations; i++) {
+        const iterationStatus = `(Iteration ${i})`
+        
+        events.status("Copy files " + iterationStatus)
+        await copyFile(browser)
+    
+        events.status("Move files " + iterationStatus)
+        await moveFiles(browser)
+    }
 
-    events.status("Move files")
-    await moveFiles(browser)
+    events.stop()
 }
 
 run()
