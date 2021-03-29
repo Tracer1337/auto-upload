@@ -6,5 +6,5 @@
     "accountsFile": "accounts.json",
     "pageTimeout": 3000,
     "copyFileAmount": 3,
-    "folderingIterations": 10
+    "folderingIterations": 6
 }

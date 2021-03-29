@@ -42,4 +42,10 @@ async function run() {
     events.stop()
 }
 
-run()
+async function loop() {
+    while (true) {
+        await run()
+    }
+}
+
+loop()
