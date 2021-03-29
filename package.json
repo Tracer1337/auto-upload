@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^7.2.0",
+    "faker": "^5.5.1",
     "ink": "^3.0.8",
     "os-utils": "^0.0.14",
     "puppeteer": "^8.0.0",
-    "react": "^16.14.0"
+    "react": "^16.14.0",
+    "uuid": "^8.3.2"
   }
 }
