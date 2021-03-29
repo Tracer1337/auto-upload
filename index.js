@@ -6,6 +6,7 @@ const storeAccount = require("./actions/storeAccount")
 const login = require("./actions/login.js")
 const uploadFile = require("./actions/uploadFile.js")
 const copyFile = require("./actions/copyFile.js")
+const moveFiles = require("./actions/moveFiles.js")
 
 async function run() {
     events.start()
@@ -26,11 +27,11 @@ async function run() {
     events.status("Upload file")
     await uploadFile(browser, filepath)
 
-    // Copy file 10 times
     events.status("Copy file")
     await copyFile(browser)
 
-    // Move files into folder
+    events.status("Move files")
+    await moveFiles(browser)
 }
 
 run()

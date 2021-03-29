@@ -8,7 +8,7 @@ async function uploadFile(browser, filepath) {
     const page = await browser.newPage()
     await page.goto(url.drive)
     // Without the timeout the upload-button isn't clickable ¯\_(ツ)_/¯
-    await page.waitForTimeout(config.uploadTimeout)
+    await page.waitForTimeout(config.pageTimeout)
 
     const button = await page.$(UPLOAD_BUTTON_SELECTOR)
 

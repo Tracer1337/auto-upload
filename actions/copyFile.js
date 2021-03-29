@@ -3,14 +3,11 @@ const config = require("../config.json")
 const url = require("../url.json")
 
 const FILE_SELECTOR = "files-grid-item"
-const CONTEXT_BUTTONS_SELECTOR = "drive-context-menu button"
-const COPY_BUTTON_INDEX = 6
+const CONTEXT_BUTTONS_SELECTOR = "drive-context-menu button:nth-child(7)"
 
 async function _copyFile(page) {
     await page.click(FILE_SELECTOR, { button: "right" })
-    const contextButtons = await page.$$(CONTEXT_BUTTONS_SELECTOR)
-    const copyButton = contextButtons[COPY_BUTTON_INDEX]
-    await copyButton.click()
+    await page.click(CONTEXT_BUTTONS_SELECTOR)
 }
 
 async function iterate(page) {
@@ -23,7 +20,7 @@ async function iterate(page) {
 async function copyFile(browser) {
     const page = await browser.newPage()
     await page.goto(url.drive)
-    await page.waitForTimeout(1000)
+    await page.waitForTimeout(config.pageTimeout)
 
     await Promise.all([
         waitForNetworkIdle(page),
