@@ -18,7 +18,9 @@ async function uploadFile(browser, filepath) {
     ])
 
     await fileChooser.accept([filepath])
-    await page.waitForSelector(FILE_SELECTOR)
+    await page.waitForSelector(FILE_SELECTOR, {
+        timeout: 0
+    })
 
     await page.close()
 }
