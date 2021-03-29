@@ -2,6 +2,7 @@ const faker = require("faker")
 const config = require("../config.json")
 const waitForNetworkIdle = require("../lib/waitForNetworkIdle")
 const url = require("../url.json")
+const { request, post } = require("../utils")
 
 const FOLDER_CREATE_BUTTON_SELECTOR = "sidebar-action-buttons button:nth-child(2)"
 const FOLDER_NAME_INPUT_SELECTOR = "mat-dialog-content input"
@@ -14,53 +15,6 @@ async function createFolder(page) {
     await page.click(FOLDER_CREATE_BUTTON_SELECTOR)
     await page.type(FOLDER_NAME_INPUT_SELECTOR, faker.internet.userName())
     await page.click(FOLDER_SUBMIT_BUTTON_SELECTOR)
-}
-
-async function moveFilesIntoFolder(page) {
-    await page.keyboard.down(CONTROL_KEY)
-    
-    const folderPos = await getNthFilePosition(page, 0)
-    const firstFilePos = await getNthFilePosition(page, 1)
-    await clickFiles(page)
-    await drag(page, firstFilePos, folderPos)
-
-    await page.keyboard.up(CONTROL_KEY)
-}
-
-async function getXSRFToken(page) {
-    const token = await page.evaluate(() => {
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-        return getCookie("XSRF-TOKEN")
-    })
-    return decodeURIComponent(token)
-}
-
-async function request(page, url, options = {}) {
-    const xsrfToken = await getXSRFToken(page)
-
-    options.headers = {
-        ...options.headers,
-        "X-XSRF-Token": xsrfToken
-    }
-    
-    return await page.evaluate(async (url, options) => {
-        const res = await fetch(url, options)
-        return await res.json()
-    }, url, options)
-}
-
-function post(page, url, payload) {
-    return request(page, url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-    })
 }
 
 function makeMovePayload(folder, files) {
@@ -92,9 +46,7 @@ async function moveFiles(browser) {
 
     await page.waitForTimeout(1000)
 
-    moveFilesIntoFolder(page)
-
-    console.log("Done")
+    await moveFilesIntoFolder(page)
 }
 
 module.exports = moveFiles
