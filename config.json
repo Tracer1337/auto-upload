@@ -1,5 +1,6 @@
 {
     "uploadFileSizeMB": 10,
     "tempDir": "temp",
-    "headless": false
+    "headless": false,
+    "password": "123456"
 }
