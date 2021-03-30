@@ -48,4 +48,8 @@ async function loop() {
     }
 }
 
-loop()
+if (config.autoRestart) {
+    loop()
+} else {
+    run()
+}
