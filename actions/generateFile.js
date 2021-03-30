@@ -3,13 +3,13 @@ const path = require("path")
 const { v4: uuid } = require("uuid")
 const crypto = require("crypto")
 const config = require("../config.json")
-const { ensureTempDirExists } = require("../utils")
+const { ensureDirExists } = require("../utils")
 
 const MEGABYTE = 10 ** 6
 const TEMP_PATH = path.join(__dirname, "..", config.tempDir)
 
 async function generateFile() {
-    await ensureTempDirExists()
+    await ensureDirExists(TEMP_PATH)
 
     const filename = uuid()
     const filepath = path.join(TEMP_PATH, filename)

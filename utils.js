@@ -1,8 +1,4 @@
 const fs = require("fs")
-const path = require("path")
-const config = require("./config.json")
-
-const TEMP_PATH = path.join(__dirname, config.tempDir)
 
 if (!process.send) {
     process.send = (message) => {
@@ -18,9 +14,15 @@ const events = {
     stop: () => process.send({ event: "stop" })
 }
 
-async function ensureTempDirExists() {
-    if (!fs.existsSync(TEMP_PATH)) {
-        await fs.promises.mkdir(TEMP_PATH)
+async function ensureDirExists(dirpath) {
+    if (!fs.existsSync(dirpath)) {
+        await fs.promises.mkdir(dirpath)
+    }
+}
+
+async function ensureFileExists(filepath) {
+    if (!fs.existsSync(filepath)) {
+        await fs.promises.writeFile(filepath, "")
     }
 }
 
@@ -62,7 +64,8 @@ function post(page, url, payload) {
 
 module.exports = {
     events,
-    ensureTempDirExists,
+    ensureDirExists,
+    ensureFileExists,
     getXSRFToken,
     request,
     post
