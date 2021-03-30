@@ -22,9 +22,6 @@ async function run() {
     const [email, password] = await register(browser)
     await storeAccount(email, password)
 
-    events.status("Login")
-    await login(browser, { email, password })
-
     events.status("Upload file")
     await uploadFile(browser, filepath)
 
