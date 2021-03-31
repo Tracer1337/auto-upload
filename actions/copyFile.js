@@ -3,7 +3,7 @@ const config = require("../config.json")
 const url = require("../url.json")
 
 const FILE_SELECTOR = "files-grid-item"
-const CONTEXT_BUTTONS_SELECTOR = "drive-context-menu button:nth-child(7)"
+const CONTEXT_BUTTONS_SELECTOR = "drive-context-menu button:nth-child(8)"
 
 async function _copyFile(page) {
     await page.click(FILE_SELECTOR, { button: "right" })
