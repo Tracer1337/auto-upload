@@ -5,12 +5,17 @@ if (!process.send) {
         if (message.event === "status") {
             console.log(message.value)
         }
+
+        if (message.event === "error") {
+            console.log(message.message)
+        }
     }
 }
 
 const events = {
     start: () => process.send({ event: "start" }),
     status: (value) => process.send({ event: "status", value }),
+    error: (message) => process.send({ event: "error", message }),
     stop: () => process.send({ event: "stop" })
 }
 

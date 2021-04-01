@@ -1,9 +1,9 @@
 {
-    "uploadFileSizeMB": 1,
-    "headless": true,
+    "uploadFileSizeMB": 10,
     "password": "123456",
     "accountsFile": "accounts.json",
-    "copyFileAmount": 3,
+    "copyFileAmount": 5,
     "folderingIterations": 6,
-    "autoRestart": false
+    "autoRestart": false,
+    "retriesOnError": 3
 }

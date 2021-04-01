@@ -4,12 +4,12 @@ const API = require("./API")
 class CloudAPI extends API {
     constructor() {
         super({
-            baseURL: "https://cloud2go.tk/"
+            baseURL: "https://cloud2go.tk/api/v1/"
         })
     }
 
     async register(email, password) {
-        const res = await this.axios.post("api/v1/auth/register", {
+        const res = await this.axios.post("auth/register", {
             email,
             password,
             password_confirmation: password
@@ -18,7 +18,7 @@ class CloudAPI extends API {
     }
 
     async login(email, password) {
-        const res = await this.axios.post("api/v1/auth/login", {
+        const res = await this.axios.post("auth/login", {
             email,
             password,
             token_name: "this argument is useless"
@@ -33,20 +33,20 @@ class CloudAPI extends API {
     async upload(file) {
         const formData = new FormData()
         formData.append("file", file)
-        const res = await this.axios.post("api/v1/uploads", formData, {
+        const res = await this.axios.post("uploads", formData, {
             headers: formData.getHeaders()
         })
         return res.status !== 201 ? null : res.data.fileEntry
     }
 
     async createFolder(name) {
-        const res = await this.axios.post("api/v1/folders", { name })
+        const res = await this.axios.post("folders", { name })
         return res.status !== 200 ? null : res.data.folder
     }
 
     async copyFiles(files, dest) {
         const entryIds = files.map(file => file.id)
-        const res = await this.axios.post("api/v1/entries/copy", {
+        const res = await this.axios.post("entries/copy", {
             entryIds,
             destination: dest.id
         })

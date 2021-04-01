@@ -13,9 +13,9 @@ const options = program.opts()
 
 function handleError(error) {
     if (typeof error === "string") {
-        events.status(error)
+        events.error(error)
     } else if (error.isAxiosError) {
-        events.status(`API Error: ${error.message}`)
+        events.error(`API Error: ${error.message}`)
     } else {
         throw error
     }
@@ -28,11 +28,10 @@ async function run() {
 
     try {
         await procedure.run()
+        events.stop()
     } catch (error) {
         handleError(error)
     }
-    
-    events.stop()
 }
 
 async function loop() {
