@@ -36,12 +36,21 @@ class CloudAPI extends API {
         const res = await this.axios.post("api/v1/uploads", formData, {
             headers: formData.getHeaders()
         })
-        return res.status !== 201 ? null : res.data
+        return res.status !== 201 ? null : res.data.fileEntry
     }
 
     async createFolder(name) {
         const res = await this.axios.post("api/v1/folders", { name })
-        return res.status !== 200 ? null : res.data
+        return res.status !== 200 ? null : res.data.folder
+    }
+
+    async copyFiles(files, dest) {
+        const entryIds = files.map(file => file.id)
+        const res = await this.axios.post("api/v1/entries/copy", {
+            entryIds,
+            destination: dest.id
+        })
+        return res.status === 200
     }
 }
 

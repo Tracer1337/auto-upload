@@ -24,8 +24,17 @@ async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+function iterateAsync(callback, iterations) {
+    const promises = []
+    for (let i = 0; i < iterations; i++) {
+        promises.push(callback())
+    }
+    return Promise.all(promises)
+}
+
 module.exports = {
     events,
     ensureFileExists,
-    sleep
+    sleep,
+    iterateAsync
 }

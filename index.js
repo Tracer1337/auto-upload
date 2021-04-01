@@ -11,6 +11,16 @@ program.parse()
 
 const options = program.opts()
 
+function handleError(error) {
+    if (typeof error === "string") {
+        events.status(error)
+    } else if (error.isAxiosError) {
+        events.status(`API Error: ${error.message}`)
+    } else {
+        throw error
+    }
+}
+
 async function run() {
     let account = await Account.findByIndex(options.account)
     const procedure = new Procedure(account)
@@ -19,11 +29,7 @@ async function run() {
     try {
         await procedure.run()
     } catch (error) {
-        if (typeof error === "string") {
-            events.status(error)
-        } else {
-            console.error(error)
-        }
+        handleError(error)
     }
     
     events.stop()

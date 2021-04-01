@@ -6,7 +6,7 @@ const MailAPI = require("./MailAPI")
 const CloudAPI = require("./CloudAPI")
 const Account = require("./Account")
 const config = require("../config.json")
-const { events } = require("./utils")
+const { events, iterateAsync } = require("./utils")
 
 const VERIFICATION_LINK_REGEX = /https.*secure.*/g
 const MEGABYTE = 10 ** 6
@@ -75,6 +75,14 @@ class Procedure {
         return folder
     }
 
+    async _copyFiles(files, dest) {
+        const success = await this.cloudAPI.copyFiles(files, dest)
+
+        if (!success) {
+            throw "Could not copy files"
+        }
+    }
+
     async run() {
         if (!this.account) {
             events.status("Register")
@@ -89,6 +97,12 @@ class Procedure {
 
         events.status("Create folder")
         const folder = await this._createFolder()
+
+        events.status("Copy file")
+        await iterateAsync(
+            () => this._copyFiles([file], folder),
+            config.copyFileAmount
+        )
     }
 }
 
