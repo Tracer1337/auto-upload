@@ -1,9 +1,16 @@
 const config = require("./config.json")
 const Procedure = require("./src/Procedure")
+const { events } = require("./src/utils")
 
 async function run() {
     const procedure = new Procedure()
-    await procedure.run()
+    events.start()
+    try {
+        await procedure.run()
+    } catch (error) {
+        events.status(error.message)
+    }
+    events.stop()
 }
 
 async function loop() {
