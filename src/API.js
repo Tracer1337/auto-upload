@@ -16,6 +16,10 @@ class API extends EventEmitter {
             this.axios.defaults.withCredentials = true
         }
     }
+
+    setToken(token) {
+        this.axios.defaults.headers["Authorization"] = `Bearer ${token}`
+    }
 }
 
 module.exports = API

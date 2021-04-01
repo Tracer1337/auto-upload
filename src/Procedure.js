@@ -18,10 +18,14 @@ class Procedure {
         const { password } = config
 
         if (!address) {
-            throw new Error("Failed to retreive email address")
+            throw new Error("Failed to receive email address")
         }
 
-        await this.cloudAPI.register(address, password)
+        const success = await this.cloudAPI.register(address, password)
+
+        if (!success) {
+            throw new Error("Failed to register")
+        }
 
         const email = await this.mailAPI.awaitEmail()
         const link = email.bodyPlainText.match(VERIFICATION_LINK_REGEX)[0]
@@ -34,11 +38,20 @@ class Procedure {
         return account
     }
 
-    async run() {
-        events.start()
+    async _login(account) {
+        const success = await this.cloudAPI.login(account.email, account.password)
 
+        if (!success) {
+            throw new Error("Failed to login")
+        }
+    }
+
+    async run() {
         events.status("Register")
         const account = await this._register()
+
+        events.status("Login")
+        await this._login(account)
     }
 }
 

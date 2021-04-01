@@ -15,6 +15,19 @@ class CloudAPI extends API {
         })
         return res.status === 200
     }
+
+    async login(email, password) {
+        const res = await this.axios.post("api/v1/auth/login", {
+            email,
+            password,
+            token_name: "this argument is useless"
+        })
+        if (res.status !== 200) {
+            return false
+        }
+        this.setToken(res.data.user.access_token)
+        return res.data
+    }
 }
 
 module.exports = CloudAPI
