@@ -6,19 +6,23 @@ const { ensureFileExists } = require("./utils")
 const ACCOUNTS_FILE = path.join(__dirname, "..", config.accountsFile)
 
 class Account {
-    constructor(email, password) {
-        this.email = email
-        this.password = password
+    static async findByIndex(index) {
+        const accounts = await this.readAccounts()
+        return !accounts[index] ? null : this.fromJSON(accounts[index])
     }
 
-    async readAccounts() {
+    static fromJSON(json) {
+        return new Account(json.email, json.password)
+    }
+
+    static async readAccounts() {
         await ensureFileExists(ACCOUNTS_FILE)
         return JSON.parse(
             await fs.promises.readFile(ACCOUNTS_FILE, "utf-8") || "[]"
         )
     }
 
-    async writeAccounts(accounts) {
+    static async writeAccounts(accounts) {
         await fs.promises.writeFile(
             ACCOUNTS_FILE,
             JSON.stringify(accounts, null, 4),
@@ -26,10 +30,22 @@ class Account {
         )
     }
 
+    constructor(email, password) {
+        this.email = email
+        this.password = password
+    }
+
     async store() {
-        const accounts = await this.readAccounts()
+        const accounts = await Account.readAccounts()
         accounts.push(this)
-        await this.writeAccounts(accounts)
+        await Account.writeAccounts(accounts)
+    }
+
+    toJSON() {
+        return {
+            email: this.email,
+            password: this.password
+        }
     }
 }
 

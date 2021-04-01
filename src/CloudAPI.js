@@ -1,3 +1,4 @@
+const FormData = require("form-data")
 const API = require("./API")
 
 class CloudAPI extends API {
@@ -27,6 +28,15 @@ class CloudAPI extends API {
         }
         this.setToken(res.data.user.access_token)
         return res.data
+    }
+
+    async upload(file) {
+        const formData = new FormData()
+        formData.append("file", file)
+        const res = await this.axios.post("api/v1/uploads", formData, {
+            headers: formData.getHeaders()
+        })
+        return res.status === 201
     }
 }
 
