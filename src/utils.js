@@ -14,20 +14,18 @@ const events = {
     stop: () => process.send({ event: "stop" })
 }
 
-async function ensureDirExists(dirpath) {
-    if (!fs.existsSync(dirpath)) {
-        await fs.promises.mkdir(dirpath)
-    }
-}
-
 async function ensureFileExists(filepath) {
     if (!fs.existsSync(filepath)) {
         await fs.promises.writeFile(filepath, "")
     }
 }
 
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 module.exports = {
     events,
-    ensureDirExists,
-    ensureFileExists
+    ensureFileExists,
+    sleep
 }
