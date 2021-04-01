@@ -16,6 +16,25 @@ class Procedure {
         this.account = account
         this.mailAPI = new MailAPI()
         this.cloudAPI = new CloudAPI()
+
+        this._uploadFile = this._withRetries(this._uploadFile, config.retriesOnError)
+        this._createFolder = this._withRetries(this._createFolder, config.retriesOnError)
+        this._copyFiles = this._withRetries(this._copyFiles, config.retriesOnError)
+    }
+
+    _withRetries(method, amountRetries) {
+        return async (...args) => {
+            for (let i = 0; i <= amountRetries; i++) {
+                try {
+                    return await method.apply(this, args)
+                } catch (error) {
+                    if (i === amountRetries) {
+                        throw error
+                    }
+                    events.status(`Retry no. ${i + 1} ("${error.message}")`)
+                }
+            }
+        }
     }
 
     async _register() {
@@ -94,15 +113,21 @@ class Procedure {
 
         events.status("Upload File")
         const file = await this._uploadFile()
+        
+        let source = file, dest
 
-        events.status("Create folder")
-        const folder = await this._createFolder()
+        for (let i = 0; i < config.folderingIterations; i++) {
+            events.status("Create folder")
+            dest = await this._createFolder()
 
-        events.status("Copy file")
-        await iterateAsync(
-            () => this._copyFiles([file], folder),
-            config.copyFileAmount
-        )
+            events.status("Copy files")
+            await iterateAsync(
+                () => this._copyFiles([source], dest),
+                config.copyFileAmount
+            )
+
+            source = dest
+        }
     }
 }
 
