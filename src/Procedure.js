@@ -1,6 +1,7 @@
 const axios = require("axios").default
 const fs = require("fs")
 const crypto = require("crypto")
+const { v4: uuid } = require("uuid")
 const MailAPI = require("./MailAPI")
 const CloudAPI = require("./CloudAPI")
 const Account = require("./Account")
@@ -53,12 +54,25 @@ class Procedure {
     async _uploadFile() {
         const buffer = crypto.randomBytes(config.uploadFileSizeMB * MEGABYTE)
         const stream = fs.ReadStream.from(buffer)
-        stream.path = config.uploadFileName
-        const success = await this.cloudAPI.upload(stream)
+        stream.path = uuid()
 
-        if (!success) {
+        const file = await this.cloudAPI.upload(stream)
+
+        if (!file) {
             throw "Failed to upload file"
         }
+
+        return file
+    }
+
+    async _createFolder() {
+        const folder = await this.cloudAPI.createFolder(uuid())
+
+        if (!folder) {
+            throw "Failed to create folder"
+        }
+
+        return folder
     }
 
     async run() {
@@ -71,7 +85,10 @@ class Procedure {
         await this._login(this.account)
 
         events.status("Upload File")
-        await this._uploadFile()
+        const file = await this._uploadFile()
+
+        events.status("Create folder")
+        const folder = await this._createFolder()
     }
 }
 

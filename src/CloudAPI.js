@@ -24,7 +24,7 @@ class CloudAPI extends API {
             token_name: "this argument is useless"
         })
         if (res.status !== 200) {
-            return false
+            return null
         }
         this.setToken(res.data.user.access_token)
         return res.data
@@ -36,7 +36,12 @@ class CloudAPI extends API {
         const res = await this.axios.post("api/v1/uploads", formData, {
             headers: formData.getHeaders()
         })
-        return res.status === 201
+        return res.status !== 201 ? null : res.data
+    }
+
+    async createFolder(name) {
+        const res = await this.axios.post("api/v1/folders", { name })
+        return res.status !== 200 ? null : res.data
     }
 }
 
