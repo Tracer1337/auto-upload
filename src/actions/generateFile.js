@@ -6,7 +6,7 @@ const config = require("../config.json")
 const { ensureDirExists } = require("../utils")
 
 const MEGABYTE = 10 ** 6
-const TEMP_PATH = path.join(__dirname, "..", config.tempDir)
+const TEMP_PATH = path.join(__dirname, "..", "..", config.tempDir)
 
 async function generateFile() {
     await ensureDirExists(TEMP_PATH)

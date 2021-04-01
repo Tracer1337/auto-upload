@@ -3,7 +3,7 @@ const path = require("path")
 const config = require("../config.json")
 const { ensureFileExists } = require("../utils.js")
 
-const ACCOUNTS_FILE = path.join(__dirname, "..", config.accountsFile)
+const ACCOUNTS_FILE = path.join(__dirname, "..", "..", config.accountsFile)
 
 class Account {
     constructor(email, password) {
