@@ -51,10 +51,12 @@ function SystemInformation() {
 function Worker({ worker }) {
     const [activity, setActivity] = React.useState("Inactive")
     const [status, setStatus] = React.useState("")
+    const [error, setError] = React.useState("")
 
     const eventHandlers = {
         "start": () => setActivity("Running"),
         "status": (message) => setStatus(message.value),
+        "error": (message) => setError(message.message),
         "stop": () => setActivity("Stopped")
     }
 
@@ -73,7 +75,13 @@ function Worker({ worker }) {
 
     if (activity !== "Running") {
         return React.createElement(Text, {
-            children: `${worker.id}: ${activity}`
+            children: `[${worker.id}] ${activity}`
+        })
+    }
+
+    if (error) {
+        return React.createElement(Text, {
+            children: `[${worker.id}] Error: ${error}`
         })
     }
 

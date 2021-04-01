@@ -1,11 +1,9 @@
 {
-    "uploadFileSizeMB": 1,
-    "tempDir": "temp",
-    "headless": false,
+    "uploadFileSizeMB": 10,
     "password": "123456",
     "accountsFile": "accounts.json",
-    "pageTimeout": 3000,
-    "copyFileAmount": 3,
+    "copyFileAmount": 5,
     "folderingIterations": 6,
-    "autoRestart": true
+    "autoRestart": false,
+    "retriesOnError": 3
 }
