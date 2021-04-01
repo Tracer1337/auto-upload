@@ -14,7 +14,7 @@ class Account {
     async readAccounts() {
         await ensureFileExists(ACCOUNTS_FILE)
         return JSON.parse(
-            await fs.promises.readFile(ACCOUNTS_FILE, "utf-8") || []
+            await fs.promises.readFile(ACCOUNTS_FILE, "utf-8") || "[]"
         )
     }
 
@@ -26,9 +26,9 @@ class Account {
         )
     }
 
-    store() {
+    async store() {
         const accounts = await this.readAccounts()
-        accounts.push(new Account(email, password))
+        accounts.push(this)
         await this.writeAccounts(accounts)
     }
 }

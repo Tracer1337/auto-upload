@@ -1,15 +1,9 @@
 const config = require("./config.json")
-const { events } = require("./utils")
+const Procedure = require("./src/Procedure")
 
 async function run() {
-    events.start()
-
-    for (let i = 0; i < config.folderingIterations; i++) {
-        const iterationStatus = `(Iteration ${i})`
-    }
-
-    await browser.close()
-    events.stop()
+    const procedure = new Procedure()
+    await procedure.run()
 }
 
 async function loop() {
