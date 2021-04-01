@@ -117,10 +117,12 @@ class Procedure {
         let source = file, dest
 
         for (let i = 0; i < config.folderingIterations; i++) {
-            events.status("Create folder")
+            const iteration = `(Iteration ${i + 1})`
+
+            events.status(`Create folder ${iteration}`)
             dest = await this._createFolder()
 
-            events.status("Copy files")
+            events.status(`Copy files ${iteration}`)
             await iterateAsync(
                 () => this._copyFiles([source], dest),
                 config.copyFileAmount
